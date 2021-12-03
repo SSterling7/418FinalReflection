@@ -182,20 +182,42 @@ pre code {
 ## x dplyr::filter() masks stats::filter()
 ## x dplyr::lag()    masks stats::lag()</code></pre>
 <pre class="r"><code>library(knitr)</code></pre>
-<pre class="r"><code>rest_habits_raw &lt;- readr::read_csv(here::here(&quot;data&quot;,&quot;412MockData.csv&quot;)) #lol just realized I&#39;ve labeled things 412 instead of 418 in this project</code></pre>
+<pre class="r"><code>rest_habits &lt;- readr::read_csv(here::here(&quot;data&quot;,&quot;cleanRH.csv&quot;))</code></pre>
 <pre><code>## 
 ## ── Column specification ────────────────────────────────────────────────────────
 ## cols(
-##   .default = col_character()
+##   .default = col_character(),
+##   age = col_double(),
+##   gpa = col_double()
 ## )
 ## ℹ Use `spec()` for the full column specifications.</code></pre>
-<pre class="r"><code># new data?</code></pre>
+<pre class="r"><code>wine &lt;- readr::read_csv(here::here(&quot;data&quot;,&quot;winemag-data-130k-v2.csv&quot;)) #ooo wine</code></pre>
+<pre><code>## Warning: Missing column names filled in: &#39;X1&#39; [1]</code></pre>
+<pre><code>## 
+## ── Column specification ────────────────────────────────────────────────────────
+## cols(
+##   X1 = col_double(),
+##   country = col_character(),
+##   description = col_character(),
+##   designation = col_character(),
+##   points = col_double(),
+##   price = col_double(),
+##   province = col_character(),
+##   region_1 = col_character(),
+##   region_2 = col_character(),
+##   taster_name = col_character(),
+##   taster_twitter_handle = col_character(),
+##   title = col_character(),
+##   variety = col_character(),
+##   winery = col_character()
+## )</code></pre>
 <p><strong>1.</strong> Provide a URL for your final project. If you created a Shiny App as your data product, you should include a link to the GitHub repository that contains your code as well as a link to your Shiny App hosted on shinyapp.io (see Chapter 2 of the shinyapps.io User Guide - this is free, but you need to sign up for an account). If you created some other type of data product, you should include a link to the GitHub repository that contains your code as well as a direct link to your data product.</p>
 <p><a href="https://github.com/SSterling7/GVSURestHabitsProject" class="uri">https://github.com/SSterling7/GVSURestHabitsProject</a></p>
 <p><a href="https://zcx0xl-stella-sterling.shinyapps.io/RestHabits/?_ga=2.27692981.820064628.1638498589-237385371.1636410798" class="uri">https://zcx0xl-stella-sterling.shinyapps.io/RestHabits/?_ga=2.27692981.820064628.1638498589-237385371.1636410798</a> (this ain’t workinggggg)</p>
 <p><strong>2.</strong> Did you work with a group? If so, include the names of your other group members here.</p>
 <p>Lauren Proctor</p>
 <p><strong>3.</strong> Write me a letter that reflects on your work in this class.Talk about the work you’ve done for the course so far. Remember that I am interested in the progress have you made towards each course-level learning objectives. Look through your work to determine what you could use to demonstrate your progress. (Provide links to or embed examples of your work.) How does your work demonstrate your progress towards these objectives? Consider the work you did on the final project, your work earlier in the term, the feedback you offered your peers on their work, and how you met your own goals. Feel free to include more links to examples of your work as necessary (please point directly to the specific work - not some general document link - so that I can easily review it). Tell me what you are particularly proud of. This is the place to be as honest as possible about your work, both reflecting critically and talking about what you proved capable of in the midst of an incredibly challenging semester. Remember that this is a reflection about your work, not your classmates.</p>
+<hr />
 <div id="course-objectives" class="section level3">
 <h3>Course Objectives</h3>
 <p><strong>Import, manage, and clean data</strong></p>
@@ -233,19 +255,72 @@ pre code {
 <li>I can call a separate R script containing self-created functions to then be used within an analysis.</li>
 <li>I can write comments that explain the “why” (Why did you choose this approach instead of an alternative? What else did you try that didn’t work?) of my code.</li>
 </ul>
+<hr />
 <p><em>Reflect:</em> Most of these objectives are fulfilled by the final project; particularly objectives 1, 2, 4, and 5.</p>
 <p>Areas I plan to cover outside of project in this reflection:</p>
 <ul>
 <li>summarize (if we dont add it to project but think we might)</li>
 <li>tidy data &amp; transformations (pivots)</li>
+<li>joins</li>
 <li>simulations</li>
 <li>functions</li>
 </ul>
-<p>I’ve learned so much in this class! I certainly know what I’m going to be doing over break… I feel comfortable reading in data and manipulating it to some degree (it’s always the stupid mistakes that get me, <strong>cough cough</strong>, <em>backticks</em>). See the “CLEAN DATA” section of the project rmd file, around lines 81-117 (<strong>would you rather I rewrote these code chunks in here instead of referencing the areas/chunks of project?</strong>). In these chunks I removed unwanted rows/cols, renamed variables, and converted some variables to numeric.</p>
+<p>I’ve learned so much in this class! I feel comfortable reading in data and manipulating it to some degree (it’s always the stupid mistakes that get me, <em>cough cough</em>, back ticks). See the “CLEAN DATA” section of the project rmd file (<strong>would you rather I rewrote these code chunks in here instead of referencing the areas/chunks of project?</strong>). In these chunks I removed unwanted rows/cols, renamed variables, and converted some variable types. filter(!is.na()) is my bff.</p>
+<p>A topic I think I need more practice on is the concept of tidy data and table pivots. Maybe it’s because I haven’t encountered data that appears “untidy” to me? The concept of transforming the dataset so that “every column is a variable, every row is an observation, and every cell is a single value” I understand. The examples from Activity 6 were fine but I’m not sure what else we do with pivots. (probs adding examples might look for messy data)</p>
+<ul>
+<li>examples of using group_by, summarize, and sorting: degrees types by average gpa. Who’s doing the worst??</li>
+</ul>
+<pre class="r"><code>rest_habits %&gt;% 
+        filter(!is.na(gpa)) %&gt;% 
+        group_by(degree) %&gt;% 
+        summarise(count = n(),
+                  avgGPA = mean(gpa)) %&gt;% 
+        arrange(avgGPA)</code></pre>
+<pre><code>## # A tibble: 3 x 3
+##   degree          count avgGPA
+##   &lt;chr&gt;           &lt;int&gt;  &lt;dbl&gt;
+## 1 Undergraduate      73   3.46
+## 2 Graduate           16   3.62
+## 3 Combined Degree     7   3.82</code></pre>
+<ul>
+<li>which countries have the highest rated wines (and the cheapest?)</li>
+</ul>
+<pre class="r"><code>wine &lt;- wine %&gt;% 
+  select(country:winery) # don&#39;t need 1st col
+
+wine %&gt;% 
+        filter(!is.na(price)) %&gt;%
+        filter(!is.na(country)) %&gt;% # can you filter two vars at the same time? google
+        group_by(country) %&gt;% 
+        summarise(count = n(),
+                  avgPoints = round(mean(points)),
+                  avgPrice = round(mean(price), 2)) %&gt;%
+        arrange(desc(avgPoints), avgPrice)</code></pre>
+<pre><code>## # A tibble: 42 x 4
+##    country    count avgPoints avgPrice
+##    &lt;chr&gt;      &lt;int&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+##  1 England       69        92     51.7
+##  2 India          9        90     13.3
+##  3 Austria     2799        90     30.8
+##  4 Germany     2120        90     42.3
+##  5 China          1        89     18  
+##  6 Morocco       28        89     19.5
+##  7 Luxembourg     6        89     23.3
+##  8 Australia   2294        89     35.4
+##  9 Canada       254        89     35.7
+## 10 US         54265        89     36.6
+## # … with 32 more rows</code></pre>
+<p>Visualizations in R are great. With tidyverse &amp; ggplot you can make things that don’t look they were made back in the early 2000’s (I’m looking at you, base R). More recently since the midterm reflection I’ve discovered the mosaic plots. These seem super fun for categorical variables and it wasn’t something I was aware of previously.</p>
+<p>(talk about different plots w/ examples)</p>
+<p>(talk about shinyapp)</p>
+<p>(run a simulation)</p>
+<p>(write a function)</p>
+<p>(talk about experience with GitHub, overcoming errors, project/rmd file layout)</p>
 <p><strong>4.</strong> Based on the progress you have made (i.e., see your response in (3)), what final grade would you give yourself for this course? Try to stick to the major grade levels (“A”, “B”, “C”, or “D or below”). Please reach out to me if you have concerns or were unable to finish your final project.</p>
+<p>A</p>
 <p><strong>5.</strong> Do you have any other thoughts or reflections about the course that you’d like to share?</p>
-<p>I think this class rocked. I’m not a particularly quick learner and I felt overwhelmed most of the time but I still enjoyed what we were learning. I wish I would have taken this during an easier semester so I could commit more time. It’s crazy how fast class time goes.</p>
-<p>There should be a part 2 where we can build on the basics (longer look at fitting regression models and the like!)</p>
+<p>I think this class rocked! I certainly know what I’m going to be doing over break… I’m not a particularly quick learner and I felt overwhelmed most of the time but I still enjoyed the course. I wish I would have taken this during an easier semester so I could commit more time. It’s crazy how fast class time goes.</p>
+<p>There should be a part 2 where we can build on the basics.</p>
 </div>
 
 
