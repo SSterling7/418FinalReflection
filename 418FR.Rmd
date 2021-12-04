@@ -2,12 +2,12 @@
 title: "Final Reflection"
 author: "Stella Sterling"
 date: "12/2/2021"
-output: html_document
+output: github_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+# ```{r setup, include=FALSE}
+# knitr::opts_chunk$set(echo = TRUE)
+# ```
 
 *loading packages and reading in files for possible examples...*
 
