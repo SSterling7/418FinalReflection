@@ -25,7 +25,7 @@ wine <- readr::read_csv(here::here("data","winemag-data-130k-v2.csv")) #ooo wine
 
 https://github.com/SSterling7/GVSURestHabitsProject
 
-https://zcx0xl-stella-sterling.shinyapps.io/RestHabits/?_ga=2.27692981.820064628.1638498589-237385371.1636410798 (this ain't workinggggg)
+https://zcx0xl-stella-sterling.shinyapps.io/RestHabits/?_ga=2.27692981.820064628.1638498589-237385371.1636410798 (this IS workinggggg)
 
 --------------------------------------------------------------------------------------------------------------
 
@@ -54,7 +54,7 @@ Areas I plan to cover outside of project in this reflection:
 - *I can restructure information to be in a “tidy” format.*
 - *I can transform information to be in a format better suited for specific tasks.*
 
-I've learned so much in this class! I feel comfortable reading in data and manipulating it to some degree (it's always the stupid mistakes that get me, *cough cough*, back ticks).
+I've learned so much in this class! I feel comfortable reading in data and manipulating it to some degree (it's always the stupid mistakes that get me, *cough cough*, back ticks [had me going for a day]).
 
 Here is the "CLEAN DATA" section of the project. In these chunks I removed unwanted rows/cols, renamed variables, and converted some variable types; which helped improve the readability/manageability of the data set.
 
@@ -93,7 +93,7 @@ rest_habits$gpa <- as.numeric(rest_habits$gpa)
 rest_habits$age <- as.numeric(rest_habits$age)
 ```
 
-- here was an interesting part of the project for me. We had many different major types respond to the survey - we needed to group these some way! I disliked using GVSUs' colleges as categories, mostly because CLAS would put things like Statistics, Japanese, or Sport Management into the same category. I think that the groupings I made make far more sense and allowed us to explore some differences between types of majors.
+- here was an interesting part of the project for me. We had many different major types respond to the survey - we needed to group these some way! I disliked using GVSUs' colleges as categories, mostly because CLAS would put things like Statistics, Japanese, or Sport Management into the same category. I think that the groupings I made make far more sense and allowed us to explore some differences between types of majors. I created a new variable called `category` to put the grouping in. As mentioned in our presentation, I still need to account for those who had more than 1 major. I think I could subset the majors using stringr; but I'd have to think more on how I'd count these observations. Would it be double counting one person if I put their information in each major category?
 
 ```{r making category column}
 rest_habits$category <- rest_habits %>%
@@ -143,9 +143,9 @@ rest_habits <- rest_habits %>%
    )
 ```
 
-- out with the old, in with the new?
+- So out with the old, in with the new? The cleaned dataset was easier to understand and work with.
 
-```{r}
+```{r compare raw vs cleaned data}
 rest_habits_raw %>% 
   slice(1:10) %>% 
   kable()
@@ -155,11 +155,18 @@ rest_habits %>%
   kable()
 ```
 
-filter(!is.na()) is my bff in many instances because of how our survey worked. For example; when looking at graduate students there were many N/A's for those observations that were either undergraduate or combined degree students (which would be unnecessary to include). By filtering out those N/A's it greatly reduced the # of obs I was working with. Side note: it wouldn't make sense to have one blanket statement filtering out N/A's at the beginning - by doing that we'd be left with no obs! Hence why I filtered depending on what variables I was looking at each time. I ended up writing it for each visualization/summary but I did consider saving different tibbles for certain variables. 
+filter(!is.na()) is my bff in many instances because of how our survey worked. For example; when looking at graduate students there were many N/A's for those observations that were either undergraduate or combined degree students (which would be unnecessary to include). By filtering out those N/A's it greatly reduced the # of obs I was working with. 
+
+Side note: it wouldn't make sense to have one blanket statement filtering out N/A's at the beginning - by doing that we'd be left with no obs! Hence why I filtered depending on what variables I was looking at each time. I ended up writing it for each visualization/summary but I did consider saving different tibbles for certain variables. 
 
 **Outside of the "CLEAN DATA" area of project:**
 
-A topic I think I need more practice on is the concept of tidy data and table pivots. Maybe it's because I haven't encountered data that appears "untidy" to me? The concept of transforming the dataset so that "every column is a variable, every row is an observation, and every cell is a single value" I understand. The examples from Activity 6 were fine but I'm not sure what else we do with pivots. (**EXAMPLE**)
+A topic I think I need more practice on is the concept of tidy data and table pivots. Maybe it's because I haven't encountered data that appears "untidy" to me? The concept of transforming the data set so that "every column is a variable, every row is an observation, and every cell is a single value" I understand. The examples from Activity 6 were fine but I havent encountered abother situation where I've thought I needed to pivot.
+
+```{r pivot example}
+
+```
+
 
 - here are examples of using group_by, summarize, and sorting: degrees types by average gpa. Who's doing the worst?? 
 
@@ -198,7 +205,6 @@ These are examples of how I can use functions we've learned to isolate informati
 
 Visualizations in R are great. With tidyverse & ggplot you can make things that don't look they were made back in the early 2000's (I'm looking at you, base R). More recently since the midterm reflection I've discovered the mosaic plots. These seem super fun for categorical variables and it wasn't something I was aware of previously. 
 
-
 - I want to make the tibble I made in the section above easier to read. Using kable to make a nicer table. I could have just piped the kable at the end of creating the table. but decided to assign my previous code to a name. It makes more sense to me to do these two things separately.
 
 ```{r}
@@ -235,6 +241,10 @@ avg_gpa_byDegree %>%
 - *I can identify and correct common errors and in R programs.*
 - *I can explore new functions or packages and implement them into analyses.*
 - *I can identify and correct common collaboration errors when working with Git/GitHub.*
+
+I just had to include this somewhere in my reflection: FINALLY figured out why the link was throwing an error for the shiny app (even though it was working when running directly from rstudio). I didn't realize there was a separate logs area to see errors in shinyapps.io; the more you know! By the way, is this something I completely missed from activities? Shiny doesn't like here::here?
+
+I believe my entire thought process for troubleshooting was copy/pasting into google (stackoverflow XOXOXO).
 
 ###### Write clear, efficient, and well-documented R programs**
 
