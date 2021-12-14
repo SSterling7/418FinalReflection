@@ -147,13 +147,13 @@ rest_habits <- rest_habits %>%
 - So out with the old, in with the new? The cleaned dataset was easier to understand and work with.
 
 ```{r compare raw vs cleaned data}
-rest_habits_raw %>% 
+rest_habits_raw %>% # old
   slice(1:10) %>% 
   kable()
 
-rest_habits %>% 
+rest_habits %>% # cleaned
   slice(1:10) %>%
-  kable() # not to call anyone out but the second observation in this table is about everything I don't want to see when analyzing rest habits
+  kable() # not to call anyone out but the second observation in this table is everything I don't want to see when analyzing rest habits
 ```
 
 filter(!is.na()) is my bff in many instances because of how our survey worked. For example; when looking at graduate students there were many N/A's for those observations that were either undergraduate or combined degree students (which would be unnecessary to include). By filtering out those N/A's it greatly reduced the # of obs I was working with. 
@@ -162,7 +162,7 @@ Side note: it wouldn't make sense to have one blanket statement filtering out N/
 
 **Outside of the "CLEAN DATA" area of project:**
 
-A topic I think I need more practice on is the concept of tidy data and table pivots. Maybe it's because I haven't encountered data that appears "untidy" to me? The concept of transforming the data set so that "every column is a variable, every row is an observation, and every cell is a single value" I understand. The examples from Activity 6 were fine but I havent encountered abother situation where I've thought I needed to pivot.
+A topic I think I need more practice on is the concept of tidy data and table pivots. Maybe it's because I haven't encountered data that appears "untidy" to me? The concept of transforming the data set so that "every column is a variable, every row is an observation, and every cell is a single value" I understand. The examples from Activity 6 were fine but I haven't encountered another situation where I've thought I needed to pivot.
 
 ```{r pivot example}
 
@@ -200,20 +200,18 @@ wine %>%
 ```
 
 
-
-
 ###### Create graphical displays and numerical summaries of data for exploratory analysis and presentations
 
 - *I can create tables of numerical summaries that draw attention to important comparisons.*
 - *I can create graphical displays of data that highlight key features.*
 - *I can combine multiple graphical displays or numerical summaries into an effective data product.*
 
-Visualizations in R are great. With tidyverse & ggplot you can make things that don't look they were made back in the early 2000's (I'm looking at you, base R). More recently since the midterm reflection I've discovered the mosaic plots. These seem super fun for categorical variables and it wasn't something I was aware of previously. 
+Visualizations in R are great. With tidyverse & ggplot you can make things that don't look they were made back in the early 2000's.
 
-- I want to make the tibble I made in the section above easier to read. Using kable to make a nicer table. I could have just piped the kable at the end of creating the table. but decided to assign my previous code to a name. It makes more sense to me to do these two things separately.
+- I want to make the tibble I made in the section above easier to read. Using kable to make a nicer table. I could have just piped the kable at the end of creating the table but decided to assign my previous code to a name. It makes more sense to me to do these two things separately.
 
 ```{r}
-#making a table
+# making a table
 avg_gpa_byDegree %>% 
   kable(col.names=c('Degree Type', 'Count', 'Average GPA'), caption="Average GPA by Degree") %>% 
   kable_styling()
@@ -253,7 +251,7 @@ rest_habits %>%
 72/151
 ```
 
-- From those who do take naps, how long are their naps usually?
+- From those who do take naps, how long are their naps?
 
 ```{r nap duration}
 rest_habits %>% 
@@ -272,10 +270,22 @@ napDur <- tibble(
 )
 
 napDur %>% 
-  mutate(percent = n/122) # 122 # respondents that aren't N/A (aka didn't respond "never" to napFreq question)
+  mutate(percent = n/122) # 122 # of respondents that aren't N/A (aka didn't respond "never" to napFreq question)
 ```
 
-Plots!
+Below is an example of a contingency table. I do these all the time in 412 (Mathematical Statistics) and somehow never picked up that they were called contingency tables. First time making it *not* by hand!
+
+```{r contingency kable}
+rest_habits %>%
+  filter(!is.na(regSleep)) %>% 
+  filter(!is.na(dayTired)) %>% 
+  group_by(regSleep, dayTired) %>%
+  summarize(n=n()) %>%
+  spread(dayTired, n)%>%
+  kable(caption = "Do you have trouble falling/staying asleep?")
+```
+
+**Plots!**
 
 - before I explore some different plots, an issue we encountered: ggplot likes to order axis as it sees fit... and we wanted them in a specific order! Using levels and factors we could set the order for our axis (and by doing it at the beginning of the project we only had to do it one time).
 
@@ -300,23 +310,32 @@ rest_habits <- rest_habits %>%
   mutate(leisureFreq = factor(leisureFreq, levels = levels_leisureFreq))
 ```
 
+- An example of a histogram. A new thing I found was geom_vline (along with hline & abline). Allowed us to add lines to our plots - we used it show where the mean lies in our GPA histogram. Noting the flexibility in setting colors, fills, linetypes, etc...
+
 ```{r gpa histogram}
 rest_habits %>% 
   filter(!is.na(gpa)) %>% 
   ggplot(aes(x=gpa)) + 
-  geom_histogram(fill="lightcoral") +
+  geom_histogram(color="black", fill="lightcoral") +
   geom_vline(aes(xintercept = mean(gpa)), linetype="dashed")
 ```
 
-```{r contingency kable}
-rest_habits %>%
-  filter(!is.na(regSleep)) %>% 
-  filter(!is.na(dayTired)) %>% 
-  group_by(regSleep, dayTired) %>%
-  summarize(n=n()) %>%
-  spread(dayTired, n)%>%
-  kable(caption = "Do you have trouble falling/staying asleep?")
+- Box plots. I really liked this visualization. This is comparing the mean GPAs of the different major categories. I liked to mess with different options here -
+
+```{r}
+rest_habits %>% 
+  filter(!is.na(gpa)) %>% 
+  filter(!is.na(category)) %>% 
+  ggplot(aes(x=category, y=gpa, fill=category)) + 
+  geom_boxplot() +
+  stat_summary(fun=mean, geom="point", shape=20, size=4, color="grey", fill="grey") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
+
+
+In my previous stat classes I worked more with quantitative/continuous variables than categorical. Because of our data it was almost exclusively discrete or categorical variables and I needed to explore different types of plots. I loved this site: https://www.r-graph-gallery.com/ggplot2-package.html I hadn't previously gone beyond scatterplots, histograms, and boxplots.
+
+- mosaic plots. These seem super fun for categorical variables and it wasn't something I was aware of previously. It's like a plot version of a contingency table. You can have multiple variabels being compared as well (not just 2). I also used labs; here I can set titles, axis, and legend labels.
 
 ```{r mosaic}
 rest_habits %>% 
@@ -325,6 +344,7 @@ rest_habits %>%
   geom_mosaic(aes(x=product(sleepDuration, sleepEnough), fill=sleepDuration)) +
   labs(y="Duration of sleep each night", x="Do you think you sleep enough each night?")
 ```
+
 
 
 
