@@ -320,7 +320,7 @@ rest_habits %>%
   geom_vline(aes(xintercept = mean(gpa)), linetype="dashed")
 ```
 
-- Box plots. I really liked this visualization. This is comparing the mean GPAs of the different major categories. I liked to mess with different options here -
+- Box plots. I really liked this visualization. This is comparing the mean GPAs of the different major categories. I liked to mess with different options here - mainly stat_summary and theme. There are so many options with both of these so I mostly just googled examples of how they were used in order to make what I wanted. With stat_summary I created a point for the mean gpa in each category. I used theme in most plots. If the names were longer I had to angle them so they didn't overlap. I also removed the legends in some since it seemed redundant.
 
 ```{r}
 rest_habits %>% 
@@ -329,24 +329,32 @@ rest_habits %>%
   ggplot(aes(x=category, y=gpa, fill=category)) + 
   geom_boxplot() +
   stat_summary(fun=mean, geom="point", shape=20, size=4, color="grey", fill="grey") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position = "none")
 ```
 
 
 In my previous stat classes I worked more with quantitative/continuous variables than categorical. Because of our data it was almost exclusively discrete or categorical variables and I needed to explore different types of plots. I loved this site: https://www.r-graph-gallery.com/ggplot2-package.html I hadn't previously gone beyond scatterplots, histograms, and boxplots.
 
-- mosaic plots. These seem super fun for categorical variables and it wasn't something I was aware of previously. It's like a plot version of a contingency table. You can have multiple variabels being compared as well (not just 2). I also used labs; here I can set titles, axis, and legend labels.
+- mosaic plots. These seem super fun for categorical variables and it wasn't something I was aware of previously. It's like a plot version of a contingency table. You can have multiple variabels being compared as well (not just 2). I also used labs; here I can set title, axis, and legend labels. I used theme to remove the observation names since they are shown/color-coded with the legend.
 
 ```{r mosaic}
 rest_habits %>% 
   filter(!is.na(sleepDuration)) %>% 
   ggplot() +
   geom_mosaic(aes(x=product(sleepDuration, sleepEnough), fill=sleepDuration)) +
-  labs(y="Duration of sleep each night", x="Do you think you sleep enough each night?")
+  labs(y="Duration of sleep each night", x="Do you think you sleep enough each night?") +
+  theme(axis.text.y = element_blank())
 ```
 
+- some bar plots comparing multiple things. A mosaic plot was a little confusung with so many observation so I liked the look of the bar plot more. The position=dodge allowed there to be multiple bars for each comparison (rather than having one bar with different fills). 
 
-
+```{r}
+rest_habits %>% 
+  filter(!is.na(sleepDuration)) %>% 
+  filter(!is.na(academics)) %>% 
+  ggplot(aes(x = academics)) + 
+  geom_bar(aes(fill = sleepDuration), position = "dodge")
+```
 
 
 (talk about shinyapp)
