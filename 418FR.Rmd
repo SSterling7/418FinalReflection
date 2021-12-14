@@ -322,7 +322,7 @@ rest_habits %>%
 
 - Box plots. I really liked this visualization. This is comparing the mean GPAs of the different major categories. I liked to mess with different options here - mainly stat_summary and theme. There are so many options with both of these so I mostly just googled examples of how they were used in order to make what I wanted. With stat_summary I created a point for the mean gpa in each category. I used theme in most plots. If the names were longer I had to angle them so they didn't overlap. I also removed the legends in some since it seemed redundant.
 
-```{r}
+```{r side by side box plots}
 rest_habits %>% 
   filter(!is.na(gpa)) %>% 
   filter(!is.na(category)) %>% 
@@ -348,7 +348,7 @@ rest_habits %>%
 
 - some bar plots comparing multiple things. A mosaic plot was a little confusung with so many observation so I liked the look of the bar plot more. The position=dodge allowed there to be multiple bars for each comparison (rather than having one bar with different fills). 
 
-```{r}
+```{r barchart dodge}
 rest_habits %>% 
   filter(!is.na(sleepDuration)) %>% 
   filter(!is.na(academics)) %>% 
@@ -356,8 +356,7 @@ rest_habits %>%
   geom_bar(aes(fill = sleepDuration), position = "dodge")
 ```
 
-
-(talk about shinyapp)
+Last but not least... an effective data project: shiny app! Once I got started I really enjoyed creating the shiny app. It's not too hard to manipulate after you learn the basic structure. This website helped a lot at the beginning; especially with it's diagrams: https://mastering-shiny.org/action-layout.html It was super easy to change themes and adjust layouts. I also noticed when adding text how it's basically HTML. I want to keep working on this app in order to make it understandable without presentation/to non-stats people.
 
 ###### Write R programs for simulations from probability models and randomization-based experiments
 
@@ -368,6 +367,11 @@ rest_habits %>%
 - *I can fit a regression model for descriptive analysis.*
 
 (run a simulation)
+
+```{r simulation}
+
+```
+
 
 (write a function)
 
