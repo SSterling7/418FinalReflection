@@ -13,6 +13,7 @@ library(tidyverse)
 library(knitr)
 library(kableExtra)
 library(ggmosaic)
+library(infer)
 ```
 
 
@@ -38,14 +39,7 @@ Lauren Proctor
 
 **3.** *Write me a letter that reflects on your work in this class.Talk about the work you've done for the course so far. Remember that I am interested in the progress have you made towards each course-level learning objectives. Look through your work to determine what you could use to demonstrate your progress. (Provide links to or embed examples of your work.) How does your work demonstrate your progress towards these objectives? Consider the work you did on the final project, your work earlier in the term, the feedback you offered your peers on their work, and how you met your own goals. Feel free to include more links to examples of your work as necessary (please point directly to the specific work - not some general document link - so that I can easily review it). Tell me what you are particularly proud of. This is the place to be as honest as possible about your work, both reflecting critically and talking about what you proved capable of in the midst of an incredibly challenging semester. Remember that this is a reflection about your work, not your classmates.*
 
-Most of the objectives are fulfilled by the final project; particularly objectives 1, 2, 4, and 5. 
-
-Areas I plan to cover outside of project in this reflection:
-
- - tidy data & transformations (pivots) (or just the transform func stuff)
- - joins
- - simulations
- - functions
+Most of the objectives are fulfilled by the final project; particularly objectives 1, 2, 4, and 5.
  
 ###### Import, manage, and clean data
 
@@ -164,13 +158,9 @@ Side note: it wouldn't make sense to have one blanket statement filtering out N/
 
 A topic I think I need more practice on is the concept of tidy data and table pivots. Maybe it's because I haven't encountered data that appears "untidy" to me? The concept of transforming the data set so that "every column is a variable, every row is an observation, and every cell is a single value" I understand. The examples from Activity 6 were fine but I haven't encountered another situation where I've thought I needed to pivot.
 
-```{r pivot example}
-
-```
-
 These are examples of how I can use functions we've learned to isolate information from a larger data set to answer specific questions I may have. Examples of using group_by, summarize, sorting, and conditionals...
 
-- degrees types by average gpa. Who's doing the worst?? 
+- degrees types by average GPA. Who's doing the worst?? 
 
 ```{r average gpa}
 avg_gpa_byDegree <- tibble(
@@ -210,7 +200,7 @@ Visualizations in R are great. With tidyverse & ggplot you can make things that 
 
 - I want to make the tibble I made in the section above easier to read. Using kable to make a nicer table. I could have just piped the kable at the end of creating the table but decided to assign my previous code to a name. It makes more sense to me to do these two things separately.
 
-```{r}
+```{r gpa by degree table}
 # making a table
 avg_gpa_byDegree %>% 
   kable(col.names=c('Degree Type', 'Count', 'Average GPA'), caption="Average GPA by Degree") %>% 
@@ -275,7 +265,7 @@ napDur %>%
 
 Below is an example of a contingency table. I do these all the time in 412 (Mathematical Statistics) and somehow never picked up that they were called contingency tables. First time making it *not* by hand!
 
-```{r contingency kable}
+```{r contingency table}
 rest_habits %>%
   filter(!is.na(regSleep)) %>% 
   filter(!is.na(dayTired)) %>% 
@@ -366,21 +356,19 @@ Last but not least... an effective data project: shiny app! Once I got started I
 - *I can use common probability distributions to simulate data and explore statistical ideas.*
 - *I can fit a regression model for descriptive analysis.*
 
-This is definitely the area I do not understand as well. We did not use this in our project and I did not fully complete the activities in this area as the project took priority. Along with improvements on the project, I plan to revisit the activities using iterations, functions, simulations, and bootstrapping in the future. I'm especially interested in fitting regression models since I've done this previously in SAS and base R. 
+This is definitely the area I do not understand that well. We did not use this in our project so it got put on the back burner... Along with improvements on the project, I plan to revisit the activities using iterations, functions, simulations, and bootstrapping in the future. I'm especially interested in fitting regression models since I've done this previously in SAS and somewhat in base R. 
 
-(run a simulation)
+- Checking normality (though the wine data set is so large it doesn't matter so much) and performing a one sample t-test and 90% confidence interval. The results show that you can be 90% confident that the mean score will fall between 88.43 and 88.46. 
 
-```{r simulation}
-
+```{r t-test}
+wine %>% 
+  ggplot(aes(x=points)) +
+  geom_histogram() # nice
+  
+t.test(wine$points, conf.level = .9)
 ```
 
-
-(write a function)
-
-```{r}
-
-```
-
+- Bootstrapping. From my understanding bootstrapping is essentially repeatedly "resampling" from one original sample of a population. This can in turn give you a larger sample to look at and make inferences from - however I don't think this is great if you have a non-randomized original sample. I think of the penny example from the book; where you had a small sample (50 pennies) and resampled (using `rep_sample_n`) in order to recalculate the means. If you resample 35 times your sample size goes from 50 to 1750 (Large sample also helps CLT!)
 
 ###### Use source documentation and other resources to troubleshoot and extend R programs**
 
